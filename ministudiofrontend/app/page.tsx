@@ -5,7 +5,7 @@ import { Sparkles, Film, Loader2, Play } from 'lucide-react';
 
 // Swap these paths based on where you are running your tests!
 // const API_BASE_URL = 'http://127.0.0.1:8000'; // Local Testing
-const API_BASE_URL = 'https://mini-studio-two.vercel.app'; // Production Cloud
+const API_BASE_URL = 'https://mini-studio-backend.vercel.app/'; // Production Cloud
 
 interface Scene {
   scene_number: number;
