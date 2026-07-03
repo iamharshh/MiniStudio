@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+google-genai
+huggingface_hub
+Pillow
+pydantic
+python-dotenv
+httpx
