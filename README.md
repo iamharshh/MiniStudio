@@ -47,10 +47,10 @@ HF_TOKEN=your_huggingface_developer_access_token
 2. Backend Installation & Boot
 Ensure your virtual environment is active, install the dependencies, and run the FastAPI server:
 
-# Install core requirements
+Install core requirements
 pip install fastapi uvicorn google-genai huggingface_hub Pillow pydantic python-dotenv httpx
 
-# Boot the local application broker
+Boot the local application broker
 uvicorn main:app --reload
 The server will boot up and expose its active API routes natively on http://localhost:8000.
 
