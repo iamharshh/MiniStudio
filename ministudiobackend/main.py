@@ -58,6 +58,10 @@ async def generate_hf_image(prompt: str) -> bytes:
 
     return await loop.run_in_executor(None, call_inference_api)
 
+@app.get("/")
+def home_verification():
+    return {"status": "MiniStudio Production API Online", "framework": "FastAPI on Vercel"}
+
 # --- AI Core Pipeline Loop ---
 async def ai_generation_pipeline(job_id: str, prompt: str, num_scenes: int):
     try:
