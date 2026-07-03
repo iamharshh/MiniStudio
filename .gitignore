@@ -1,0 +1,29 @@
+# --- Environment Variables & Secrets (CRITICAL) ---
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# --- Python Backend Dependencies & Caches ---
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# --- Next.js Frontend Dependencies & Builds ---
+node_modules/
+/out/
+/.next/
+.next/
+.modules/
+
+# --- Operating System Files ---
+.DS_Store
+Thumbs.db
