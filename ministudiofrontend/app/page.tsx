@@ -3,9 +3,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { Sparkles, Film, Loader2, Play } from 'lucide-react';
 
-// Swap these paths based on where you are running your tests!
-// const API_BASE_URL = 'http://127.0.0.1:8000'; // Local Testing
-const API_BASE_URL = 'https://mini-studio-backend.vercel.app/'; // Production Cloud
+const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || 'https://mini-studio-backend.vercel.app').replace(/\/$/, '');
+
+const getApiUrl = (path: string) => {
+  if (!API_BASE_URL) return path;
+  return `${API_BASE_URL}${path}`;
+};
 
 interface Scene {
   scene_number: number;
@@ -36,7 +39,7 @@ export default function Home() {
 
   const checkStatus = async (id: string) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/status/${id}`);
+      const res = await fetch(getApiUrl(`/api/status/${id}`));
       const data = await res.json();
       
       setStatus(data.status);
@@ -63,7 +66,7 @@ export default function Home() {
     setStatus('queued');
 
     try {
-      const res = await fetch(`${API_BASE_URL}/generate`, {
+      const res = await fetch(getApiUrl('/api/generate'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt, num_scenes: Number(numScenes) }),
@@ -194,7 +197,7 @@ export default function Home() {
                     <div key={scene.scene_number} className="bg-slate-950 rounded-xl border border-slate-800 p-3 flex flex-col gap-3">
                       <div className="relative aspect-video w-full bg-slate-900 rounded-lg overflow-hidden border border-slate-800">
                         <img
-                          src={`${API_BASE_URL}/${scene.image_url}`}
+                          src={getApiUrl(scene.image_url)}
                           alt={`Frame ${scene.scene_number}`}
                           className="w-full h-full object-cover"
                           loading="lazy"

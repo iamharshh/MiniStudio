@@ -15,8 +15,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Official SDK clients initialized natively
-client = genai.Client()
-hf_client = InferenceClient(api_key=os.getenv("HF_TOKEN"))
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+HF_TOKEN = os.getenv("HF_TOKEN")
+
+client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
+hf_client = InferenceClient(api_key=HF_TOKEN) if HF_TOKEN else None
 
 app = FastAPI(title="MiniStudio Multimodal Pipeline - Core Production Stack")
 
@@ -62,9 +65,18 @@ async def generate_hf_image(prompt: str) -> bytes:
 def home_verification():
     return {"status": "MiniStudio Production API Online", "framework": "FastAPI on Vercel"}
 
+@app.get("/healthz")
+def health_check():
+    return {"status": "ok"}
+
 # --- AI Core Pipeline Loop ---
 async def ai_generation_pipeline(job_id: str, prompt: str, num_scenes: int):
     try:
+        if client is None:
+            raise RuntimeError("GEMINI_API_KEY is not configured")
+        if hf_client is None:
+            raise RuntimeError("HF_TOKEN is not configured")
+
         JOBS_DB[job_id]["status"] = "orchestrating"
         print(f"[{job_id}] Waking up Gemini Director Agent...")
 
