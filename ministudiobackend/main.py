@@ -14,9 +14,18 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
+def get_env(*names: str) -> Optional[str]:
+    for name in names:
+        value = os.getenv(name)
+        if value and str(value).strip():
+            return value
+    return None
+
+
 # Official SDK clients initialized natively
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
-HF_TOKEN = os.getenv("HF_TOKEN")
+GEMINI_API_KEY = get_env("GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_GENAI_API_KEY")
+HF_TOKEN = get_env("HF_TOKEN", "HF_API_TOKEN", "HUGGINGFACE_HUB_TOKEN", "HUGGINGFACE_API_TOKEN")
 
 client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
 hf_client = InferenceClient(api_key=HF_TOKEN) if HF_TOKEN else None
@@ -67,7 +76,13 @@ def home_verification():
 
 @app.get("/healthz")
 def health_check():
-    return {"status": "ok"}
+    return {
+        "status": "ok",
+        "configured": {
+            "gemini": bool(GEMINI_API_KEY),
+            "hf": bool(HF_TOKEN),
+        },
+    }
 
 # --- AI Core Pipeline Loop ---
 async def ai_generation_pipeline(job_id: str, prompt: str, num_scenes: int):
